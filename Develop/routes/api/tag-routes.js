@@ -8,7 +8,7 @@ router.get('/', (req, res) => {
   // be sure to include its associated Product data
   try {
     const productData = await Tag.findAll({
-      include: [ { model: Product, as: 'tags' }],
+      include: [{ model: Product, as: 'tags' }],
     });
     res.status(200).json(productData);
   } catch (err) {
@@ -21,7 +21,7 @@ router.get('/:id', async (req, res) => {
   // be sure to include its associated Product data
   try {
     const productData = await Tag.findByPk(req.params.id, {
-      include: [ { model: Product, as: 'tags' }],
+      include: [{ model: Product, as: 'tags' }],
     });
     res.status(200).json(productData);
   } catch (err) {
@@ -30,17 +30,41 @@ router.get('/:id', async (req, res) => {
 });
 
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   // create a new tag
+  try {
+    const tag = await Tag.create(req.body);
 
+    res.status(200).json(tag);
+  } catch (err) {
+    res.status(400).json(err);
+  }
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', async (req, res) => {
   // update a tag's name by its `id` value
+  try {
+    const tag = await Tag.update(req.body, {
+      where: { id: req.params.id }
+    });
+
+    res.status(200).json(tag);
+  } catch (err) {
+    res.status(400).json(err);
+  }
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
   // delete on tag by its `id` value
+  try {
+    const tag = await Tag.destroy({
+      where: { id: req.params.id }
+    });
+
+    res.status(200).json(tag);
+  } catch (err) {
+    res.status(400).json(err);
+  }
 });
 
 module.exports = router;
